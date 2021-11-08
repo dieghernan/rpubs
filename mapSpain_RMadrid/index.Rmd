@@ -714,15 +714,13 @@ obtenidas como capas ráster de 3 o 4 bandas) o como fondo de mapas dinámicos,
 a través del paquete `leaflet`.
 
 Los proveedores se han extraido del plugin para leaflet 
-[leaflet-providerESP](https://dieghernan.github.io/leaflet-providersESP/).
+[leaflet-providerESP](https://dieghernan.github.io/leaflet-providersESP/visor/).
 
 
-<iframe id="inlineFrameExample"
-    title="leaflet-providerESP"
-    width="100%"
-    height="300"
-    src="https://dieghernan.github.io/leaflet-providersESP/visor/">
-</iframe>
+```{r echo=FALSE}
+knitr::include_graphics("leaflet_screenshot.png")
+
+```
 
 ---
 
