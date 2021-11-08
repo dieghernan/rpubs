@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/832740/23a13eb0d5af463ca73a2dcd14ee0db6
+bundleId: https://api.rpubs.com/api/v1/document/832740/23a13eb0d5af463ca73a2dcd14ee0db6
+url: http://rpubs.com/dieghernan/832740
+when: 1636378239.82197
+lastSyncTime: 1636378239.82197
