@@ -7,3 +7,4 @@ A repository that holds the source code of several of my publications on
 ## Index
 
 -   [mapSpain_RMadrid](./mapSpain_RMadrid/index.html)
+-   [mapSpain_article](./mapSpain_article/index.html)
