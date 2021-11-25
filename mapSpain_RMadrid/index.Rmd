@@ -3,7 +3,7 @@ title: "mapSpain: Mapas de España en R"
 subtitle: "Grupo de Usuarios de R de Madrid"  
 author: 
   - "Diego Hernangómez"
-date: '2021-11-18'
+date: '2021-11-25'
 output:
   xaringan::moon_reader:
     self_contained: false
