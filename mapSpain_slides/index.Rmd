@@ -25,6 +25,7 @@ knitr::opts_chunk$set(
   cache = FALSE,
   comment = "#>",
   echo = TRUE,
+  cache = TRUE,
   message = FALSE,
   warning = FALSE,
   hiline = TRUE,
@@ -239,15 +240,22 @@ Resultados satisfactorios.
 .pull-right[
 ```{r , echo=FALSE}
 
+# Imagen Ria Ferrol
+tile <- esp_getTiles(esp_get_munic(munic = "Ferrol"), "PNOA",
+  bbox_expand = 0.5, zoommin = 1
+)
 
 ggplot(esp_all) +
+  layer_spatraster(tile) +
   geom_sf(aes(color = source),
     fill = NA, show.legend = "line",
     lwd = 1.2
   ) +
   coord_sf(
-    crs = 4326, xlim = c(-8.378448, -8.125076),
-    ylim = c(43.411033, 43.577406)
+    crs = 4326,
+    xlim = c(-8.384421, -8.154413),
+    ylim = c(43.43201, 43.59545),
+    expand = FALSE
   ) +
   scale_color_manual(values = hcl.colors(3, "Berlin")) +
   theme_void() +
