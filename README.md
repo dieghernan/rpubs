@@ -1,4 +1,3 @@
-
 # rpubs
 
 A repository that holds the source code of several of my publications on
@@ -6,5 +5,5 @@ A repository that holds the source code of several of my publications on
 
 ## Index
 
--   [mapSpain_RMadrid](./mapSpain_RMadrid/index.html)
--   [mapSpain_article](./mapSpain_article/index.html)
+- [mapSpain_RMadrid](https://dieghernan-mapspain-r.share.connect.posit.cloud/)
+- [mapSpain_article](./mapSpain_article/index.html)
