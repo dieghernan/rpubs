@@ -3,7 +3,7 @@ title: "mapSpain: Mapas de España en R"
 subtitle: "Grupo de Usuarios de R de Madrid"  
 author: 
   - "Diego Hernangómez"
-date: '2021-11-25'
+date: '2021-11-25 (updated 2026-07-04)'
 output:
   xaringan::moon_reader:
     self_contained: false
@@ -18,12 +18,14 @@ output:
 ---
 
 
-```{r setup, include=FALSE}
+```{r}
+#| label: setup
+#| include: false
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.retina = 3,
   out.width = "100%",
-  cache = FALSE,
+  cache = TRUE,
   comment = "#>",
   echo = TRUE,
   message = FALSE,
@@ -34,6 +36,7 @@ knitr::opts_chunk$set(
 
 
 library(mapSpain)
+library(tidyverse)
 ```
 
 class: inverse center middle
@@ -96,7 +99,9 @@ Página web: <https://ropenspain.github.io/mapSpain/>
 ## Instalación
 
 ### CRAN
-```{r instcran, eval=FALSE}
+```{r}
+#| label: instcran
+#| eval: false
 install.packages("mapSpain", dependencies = TRUE)
 ```
 
@@ -105,7 +110,9 @@ install.packages("mapSpain", dependencies = TRUE)
 
 Usando el [r-universe](https://ropenspain.r-universe.dev/ui#builds):
 
-```{r instruniverse, eval=FALSE}
+```{r}
+#| label: instruniverse
+#| eval: false
 # Enable this universe
 options(repos = c(
   ropenspain = "https://ropenspain.r-universe.dev",
@@ -117,8 +124,9 @@ install.packages("mapSpain", dependencies = TRUE)
 
 ### Remotes
 
-```{r instremotes, eval=FALSE}
-
+```{r}
+#| label: instremotes
+#| eval: false
 remotes::install_github("rOpenSpain/mapSpain", dependencies = TRUE)
 ```
 
@@ -132,12 +140,13 @@ layout: true
 ---
 
 .pull-left[
-```{r intro, eval=FALSE}
-
+```{r}
+#| label: intro
+#| eval: false
 library(mapSpain)
 library(tidyverse)
 
-galicia <- esp_get_munic_siane(region = "Galicia") %>%
+galicia <- esp_get_munic_siane(region = "Galicia") |>
   # Homogeinizo labels
   mutate(
     Provincia = esp_dict_translate(ine.prov.name, "es")
@@ -158,8 +167,10 @@ ggplot(galicia) +
 ]
 
 .pull-right[
-```{r, echo=FALSE, out.width="90%", ref.label="intro"}
-
+```{r}
+#| echo: false
+#| out-width: 90%
+#| ref-label: intro
 ```
 
 
@@ -169,7 +180,8 @@ ggplot(galicia) +
 
 Si exploramos el dataset:
 
-```{r galicia_data}
+```{r}
+#| label: galicia_data
 library(reactable)
 
 reactable(galicia,
@@ -191,15 +203,17 @@ Comparamos ahora **mapSpain** con otros dos paquetes que proporcionan
 objetos `sf` de distintos paises:
 
 
-```{r compara}
+```{r}
+#| label: compara
 # rnaturalearth
 library(rnaturalearth)
 
 esp_rnat <- ne_countries("large", country = "Spain", returnclass = "sf")
 
 # gadm
-library(GADMTools)
-esp_gdam <- gadm_sf_loadCountries("ESP")
+library(geodata)
+
+esp_gdam <- gadm("ESP", level = 0, path = ".") |> sf::st_as_sf()
 
 # MapSpain
 
@@ -210,7 +224,7 @@ esp_mapSpain <- esp_get_country(epsg = 4326)
 
 esp_all <- bind_rows(
   esp_rnat,
-  esp_gdam$sf,
+  esp_gdam,
   esp_mapSpain
 )
 
@@ -238,9 +252,8 @@ Resultados satisfactorios.
 ]
 
 .pull-right[
-```{r , echo=FALSE}
-
-
+```{r}
+#| echo: false
 ggplot(esp_all) +
   geom_sf(aes(color = source),
     fill = NA, show.legend = "line",
@@ -351,7 +364,7 @@ esp_dict_region_code(iso2vals, origin = "iso2", destination = "nuts")
 # Soporta diferentes niveles
 valsmix <- c("Centro", "Andalucia", "Seville", "Menorca")
 esp_dict_region_code(valsmix, destination = "nuts")
-esp_dict_region_code(c("Murcia", "Las Palmas", "Aragón"),destination = "iso2")
+esp_dict_region_code(c("Murcia", "Las Palmas", "Aragón"), destination = "iso2")
 ```
 
 ---
@@ -359,7 +372,7 @@ esp_dict_region_code(c("Murcia", "Las Palmas", "Aragón"),destination = "iso2")
 ### `esp_dict_translate()`
 
 ```{r}
-vals <- c("La Rioja", "Sevilla", "Madrid","Jaen", "Orense", "Baleares")
+vals <- c("La Rioja", "Sevilla", "Madrid", "Jaen", "Orense", "Baleares")
 esp_dict_translate(vals, lang = "en")
 esp_dict_translate(vals, lang = "es")
 esp_dict_translate(vals, lang = "ca")
@@ -370,7 +383,7 @@ esp_dict_translate(vals, lang = "ca")
 ### `esp_dict_translate()`
 
 ```{r}
-vals <- c("La Rioja", "Sevilla", "Madrid","Jaen", "Orense", "Baleares")
+vals <- c("La Rioja", "Sevilla", "Madrid", "Jaen", "Orense", "Baleares")
 esp_dict_translate(vals, lang = "eu")
 esp_dict_translate(vals, lang = "ga")
 ```
@@ -413,8 +426,9 @@ resolución.
 .pull-left[
 
 
-```{r pais, eval=FALSE}
-
+```{r}
+#| label: pais
+#| eval: false
 esp <- esp_get_country(moveCAN = FALSE)
 
 ggplot(esp) +
@@ -426,8 +440,11 @@ ggplot(esp) +
 
 .pull-right[
 
-```{r, ref.label="pais", fig.asp=.4, echo=FALSE, out.width="90%"}
-
+```{r}
+#| echo: false
+#| ref-label: pais
+#| fig-asp: 0.4
+#| out-width: 90%
 ```
 
 
@@ -446,8 +463,9 @@ alrededor de la inserción del mapa ([ejemplos](https://ropenspain.github.io/map
 
 .pull-left[
 
-```{r can, eval=FALSE}
-
+```{r}
+#| label: can
+#| eval: false
 esp_can <- esp_get_country()
 can_prov <- esp_get_can_provinces()
 can_box <- esp_get_can_box()
@@ -464,8 +482,11 @@ ggplot(esp_can) +
 
 .pull-right[
 
-```{r, ref.label="can", echo=FALSE, out.width="70%", fig.asp=0.65}
-
+```{r}
+#| echo: false
+#| ref-label: can
+#| out-width: 70%
+#| fig-asp: 0.65
 ```
 
 
@@ -480,8 +501,9 @@ realizar analisis espaciales, se debe usar `moveCAN = FALSE`**
 
 .pull-left[
 
-```{r nuts, fig.asp=0.6}
-
+```{r}
+#| label: nuts
+#| fig-asp: 0.6
 nuts1 <- esp_get_nuts(resolution = 20, epsg = 3035, nuts_level = 1)
 
 ggplot(nuts1) +
@@ -496,7 +518,8 @@ ggplot(nuts1) +
 
 .pull-right[
 
-```{r, fig.asp=0.3}
+```{r}
+#| fig-asp: 0.3
 # Baleares NUTS3
 nuts3_baleares <- c("ES531", "ES532", "ES533")
 paste(esp_dict_region_code(nuts3_baleares, "nuts"), collapse = ", ")
@@ -518,8 +541,9 @@ ggplot(nuts3_sf) +
 
 .pull-left[
 
-```{r ccaa, eval=FALSE}
-
+```{r}
+#| label: ccaa
+#| eval: false
 ccaa <- esp_get_ccaa(ccaa = c(
   "Catalunya",
   "Comunidad Valenciana",
@@ -527,7 +551,7 @@ ccaa <- esp_get_ccaa(ccaa = c(
   "Baleares"
 ))
 
-ccaa <- ccaa %>% mutate(
+ccaa <- ccaa |> mutate(
   ccaa_cat = esp_dict_translate(ccaa$ine.ccaa.name, "ca")
 )
 
@@ -542,8 +566,10 @@ ggplot(ccaa) +
 
 .pull-right[
 
-```{r, ref.label="ccaa", fig.asp=0.85, echo=FALSE}
-
+```{r}
+#| echo: false
+#| ref-label: ccaa
+#| fig-asp: 0.85
 ```
 
 
@@ -558,8 +584,9 @@ provincias de esa entidad.
 
 .pull-left[
 
-```{r prov, eval=FALSE}
-
+```{r}
+#| label: prov
+#| eval: false
 provs <- esp_get_prov_siane(c(
   "Andalucía", "Ciudad Real",
   "Murcia", "Ceuta", "Melilla"
@@ -578,8 +605,10 @@ ggplot(provs) +
 
 .pull-right[
 
-```{r, ref.label="prov", fig.asp=0.7, echo=FALSE}
-
+```{r}
+#| echo: false
+#| ref-label: prov
+#| fig-asp: 0.7
 ```
 
 
@@ -591,22 +620,24 @@ ggplot(provs) +
 
 .pull-left[
 
-```{r, ref.label="munic", echo=FALSE}
-
+```{r}
+#| echo: false
+#| ref-label: munic
 ```
 
 ]
 
 .pull-right[
 
-```{r munic, eval=FALSE}
-
-munic <- esp_get_munic(region = "Segovia") %>%
+```{r}
+#| label: munic
+#| eval: false
+munic <- esp_get_munic(region = "Segovia") |>
   # Datos de ejemplo: Población INE
-  left_join(mapSpain::pobmun19, by = c("cpro", "cmun"))
+  left_join(mapSpain::pobmun25, by = c("cpro", "cmun"))
 
 ggplot(munic) +
-  geom_sf(aes(fill = pob19), alpha = 0.9, color = NA) +
+  geom_sf(aes(fill = pob25), alpha = 0.9, color = NA) +
   scale_fill_gradientn(
     colors = hcl.colors(100, "Inferno"),
     n.breaks = 10,
@@ -616,7 +647,7 @@ ggplot(munic) +
   labs(
     fill = "Habitantes",
     title = "Población en Segovia",
-    subtitle = "Datos INE (2019)"
+    subtitle = "Datos INE (2025)"
   ) +
   theme_void() +
   theme(
@@ -637,7 +668,9 @@ ggplot(munic) +
 Disponibles como cuadrados y hexágonos, para provincias y CCAA.
 
 .pull-left[
-```{r hex, eval=FALSE}
+```{r}
+#| label: hex
+#| eval: false
 cuad <- esp_get_hex_ccaa()
 hex <- esp_get_grid_prov()
 
@@ -656,8 +689,10 @@ ggplot(hex) +
 ]
 
 .pull-right[
-```{r echo=FALSE, ref.label="hex",out.width="50%"}
-
+```{r}
+#| echo: false
+#| ref-label: hex
+#| out-width: 50%
 ```
 
 
@@ -694,9 +729,9 @@ Los proveedores se han extraido del plugin para leaflet
 [leaflet-providerESP](https://dieghernan.github.io/leaflet-providersESP/visor/).
 
 
-```{r echo=FALSE}
+```{r}
+#| echo: false
 knitr::include_graphics("leaflet_screenshot.png")
-
 ```
 
 ---
@@ -706,14 +741,16 @@ knitr::include_graphics("leaflet_screenshot.png")
 
 Tenemos varias opciones que podemos emplear para componer mapas base:
 
-```{r imagesestaticos, eval=FALSE}
+```{r}
+#| label: imagesestaticos
+#| eval: false
 madrid_munis <- esp_get_munic_siane(region = "Madrid")
 base_pnoa <- esp_getTiles(madrid_munis, "PNOA", bbox_expand = 0.1, zoommin = 1)
 
 library(tidyterra)
 
 ggplot() +
-  geom_spatraster_rgb( data = base_pnoa) +
+  geom_spatraster_rgb(data = base_pnoa) +
   geom_sf(
     data = madrid_munis, color = "blue", fill = "blue",
     alpha = 0.25, lwd = 0.5
@@ -724,13 +761,14 @@ ggplot() +
 # Usando la opción mask
 madrid <- esp_get_munic_siane(munic = "^Madrid$")
 
-madrid_mask <- esp_getTiles(madrid, mask = TRUE, crop = TRUE,  zoommin = 2)
+madrid_mask <- esp_getTiles(madrid, mask = TRUE, crop = TRUE, zoommin = 2)
 
 ggplot() +
-  geom_spatraster_rgb(data =madrid_mask) +
+  geom_spatraster_rgb(data = madrid_mask) +
   theme_void() +
-  labs(title = "Mapa Base de la Comunidad de Madrid",
-       caption = "CC BY 4.0 www.iderioja.org"
+  labs(
+    title = "Mapa Base de la Comunidad de Madrid",
+    caption = "CC BY 4.0 www.iderioja.org"
   )
 ```
 
@@ -739,8 +777,11 @@ ggplot() +
 ### Creación de mapas estáticos
 
 
-```{r echo=FALSE, ref.label="imagesestaticos",fig.show = "hold", out.width = "50%"}
-
+```{r}
+#| echo: false
+#| ref-label: imagesestaticos
+#| fig-show: hold
+#| out-width: 50%
 ```
 
 
@@ -751,38 +792,41 @@ ggplot() +
 
 Estas capas se pueden usar también como fondo en mapas estáticos
 
-```{r leaflet, eval=FALSE}
-
+```{r}
+#| label: leaflet
+#| eval: false
 stations <- esp_get_railway(spatialtype = "point", epsg = 4326)
 
 library(leaflet)
 
-leaflet(stations, elementId  = "railways") %>%
-  addProviderEspTiles("IGNBase.Gris", group = "Base") %>%
-  addProviderEspTiles("MTN", group = "MTN") %>%
-  addProviderEspTiles("RedTransporte.Ferroviario", group = "Lineas Ferroviarias") %>%
-  addMarkers(group = "Estaciones",
+leaflet(stations, elementId = "railways") |>
+  addProviderEspTiles("IGNBase.Gris", group = "Base") |>
+  addProviderEspTiles("MTN", group = "MTN") |>
+  addProviderEspTiles("RedTransporte.Ferroviario", group = "Lineas Ferroviarias") |>
+  addMarkers(
+    group = "Estaciones",
     popup = sprintf(
-    "<strong>%s</strong>",
-    stations$rotulo) %>%
+      "<strong>%s</strong>",
+      stations$rotulo
+    ) |>
       lapply(htmltools::HTML)
-    ) %>%
+  ) |>
   addLayersControl(
     baseGroups = c("Base", "MTN"),
     overlayGroups = c("Lineas Ferroviarias", "Estaciones"),
     options = layersControlOptions(collapsed = FALSE)
   )
-
-
 ```
 
 ---
 
 ### Mapas dinámicos usando mapSpain
 
-```{r , echo=FALSE, ref.label="leaflet", out.width="100%", out.height="500"}
-
-
+```{r}
+#| echo: false
+#| ref-label: leaflet
+#| out-width: 100%
+#| out-height: '500'
 ```
 
 ---
@@ -830,9 +874,9 @@ de España, como carreteras y líneas ferroviarias.
 
 Presenta gran cantidad de ejemplos con códigos reproducibles:
 
-```{r echo=FALSE}
+```{r}
+#| echo: false
 knitr::include_graphics("docs-screenshot.png")
-
 ```
 
 
